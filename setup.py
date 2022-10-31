@@ -5,6 +5,7 @@ def get_requirements()->List[str]:
     """
     This function returns the list of requirements
     """
+    
     requirements_list:List[str]=[]
     return requirements_list
 
