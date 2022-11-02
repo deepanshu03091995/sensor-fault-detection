@@ -3,6 +3,7 @@ from sensor.entity.artifact_entity import DataIngestionArtifact
 from sensor.exception import SensorException
 import sys, os
 from sensor.logger import logging
+from sensor.components.data_ingestion import DataIngestion
 
 
 class TrainPipeline:
@@ -16,7 +17,14 @@ class TrainPipeline:
             )
 
             logging.info("Starting data Ingestion")
-            logging.info("data Ingestion completed")
+            data_ingestion = DataIngestion(
+                data_ingestion_config=self.data_ingestion_config
+            )
+            data_ingestion_artifact = data_ingestion.initiate_data_ingestion()
+            logging.info(
+                "data Ingestion completed and Artifact:{data_ingestion_artifact}"
+            )
+            return data_ingestion_artifact
 
         except Exception as e:
             raise SensorException(e, sys)
