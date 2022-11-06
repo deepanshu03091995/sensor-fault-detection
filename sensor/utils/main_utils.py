@@ -42,6 +42,7 @@ def save_numpy_array_data(file_path: str, array: np.array):
 
 
 def load_numpy_array_data(file_path: str) -> np.array:
+
     """
     load numpy array data from file
     file_path: str location of file to load
