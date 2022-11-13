@@ -3,11 +3,13 @@ from sensor.entity.config_entity import (
     DataIngestionConfig,
     DataValidationConfig,
     DataTransformationConfig,
+    ModelTrainerConfig,
 )
 from sensor.entity.artifact_entity import (
     DataIngestionArtifact,
     DataValidationArtifact,
     DataTransformationArtifact,
+    ModelTrainerArtifact,
 )
 from sensor.exception import SensorException
 import sys, os
@@ -15,6 +17,7 @@ from sensor.logger import logging
 from sensor.components.data_ingestion import DataIngestion
 from sensor.components.data_validation import DataValidation
 from sensor.components.data_transformation import DataTransformation
+from sensor.components.model_trainer import ModelTrainer
 
 
 class TrainPipeline:
@@ -73,9 +76,18 @@ class TrainPipeline:
         except Exception as e:
             raise SensorException(e, sys)
 
-    def start_model_trainer(self):
+    def start_model_trainer(
+        self, data_transformation_artifact: DataTransformationArtifact
+    ):
         try:
-            pass
+            model_trainer_config = ModelTrainerConfig(
+                training_pipeline_config=self.training_pipeline_config
+            )
+            model_trainer = ModelTrainer(
+                model_trainer_config, data_transformation_artifact
+            )
+            model_trainer_artifact = model_trainer.initiate_model_trainer()
+            return model_trainer_artifact
         except Exception as e:
             raise SensorException(e, sys)
 
@@ -99,6 +111,9 @@ class TrainPipeline:
             )
             data_transformation_artifact = self.start_data_transformation(
                 data_validation_artifact=data_validation_artifact
+            )
+            model_trainer_artifact = self.start_model_trainer(
+                data_transformation_artifact
             )
 
         except Exception as e:

@@ -8,4 +8,5 @@ dill
 imblearn==0.0
 certifi
 python-dotenv
+xgboost==1.6.2
 -e .
